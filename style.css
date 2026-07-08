@@ -1,0 +1,368 @@
+:root {
+  --bg-dark: #2b333c;
+  --bg-light: #dbc4c4;
+  --search-bg: #e8e4f0;
+  --search-text: #2b2b33;
+  --pin-blue: #5b7c9d;
+  --pin-text: #042c53;
+  --text-on-dark: #f4f2f7;
+  --text-on-light: #2b2b33;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --transition: 220ms ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-body);
+  overflow: hidden;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Mapa a pantalla completa ---------- */
+
+#map {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background-color: var(--bg-dark);
+  transition: background-color var(--transition);
+}
+
+body[data-theme="light"] #map {
+  background-color: var(--bg-light);
+}
+
+/* ---------- Header / buscador ---------- */
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: var(--search-bg);
+  border-radius: 999px;
+  padding: 4px 8px 4px 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  gap: 8px;
+  width: 100%;
+}
+
+.search-bar input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--search-text);
+  padding: 12px 0;
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: #6b6774;
+}
+
+.search-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--search-text);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.search-btn:hover,
+.search-btn:focus-visible {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.search-btn:active {
+  transform: scale(0.94);
+}
+
+.search-error {
+  margin: 0;
+  padding: 0 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffb3b3;
+  min-height: 16px;
+}
+
+body[data-theme="light"] .search-error {
+  color: #a02c2c;
+}
+
+/* Desktop: buscador compacto anclado a la esquina */
+@media (min-width: 720px) {
+  .app-header {
+    flex-direction: row;
+    justify-content: flex-start;
+    width: auto;
+    left: 24px;
+    top: 24px;
+    right: auto;
+  }
+
+  .search-bar {
+    width: 340px;
+  }
+}
+
+/* ---------- Toggle de tema ---------- */
+
+.theme-toggle {
+  position: fixed;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 8px;
+  font-family: var(--font-body);
+
+  bottom: 20px;
+  right: 60px;
+}
+
+@media (min-width: 720px) {
+  .theme-toggle {
+    top: 24px;
+    right: 24px;
+    bottom: auto;
+  }
+}
+
+.theme-toggle__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-on-dark);
+  transition: color var(--transition);
+}
+
+body[data-theme="light"] .theme-toggle__label {
+  color: var(--text-on-light);
+}
+
+.theme-toggle__switch {
+  position: relative;
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  background: #1c2128;
+  transition: background var(--transition);
+}
+
+body[data-theme="light"] .theme-toggle__switch {
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.theme-toggle__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform var(--transition), background var(--transition);
+}
+
+body[data-theme="dark"] .theme-toggle__knob {
+  transform: translateX(20px);
+}
+
+body[data-theme="light"] .theme-toggle__knob {
+  background: #1c2128;
+  transform: translateX(0);
+}
+
+.theme-toggle:focus-visible .theme-toggle__switch {
+  box-shadow: 0 0 0 2px var(--pin-blue);
+}
+
+/* ---------- Boton de ubicacion ---------- */
+
+.locate-btn {
+  position: fixed;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  bottom: 104px;
+  right: 20px;
+  border: none;
+  border-radius: 50%;
+  background: var(--search-bg);
+  color: var(--search-text);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: transform var(--transition), background var(--transition);
+}
+
+.locate-btn:hover,
+.locate-btn:focus-visible {
+  background: #ffffff;
+}
+
+.locate-btn:active {
+  transform: scale(0.92);
+}
+
+.locate-btn.is-loading svg {
+  animation: spin 800ms linear infinite;
+}
+
+@media (min-width: 720px) {
+  .locate-btn {
+    bottom: 20px;
+    right: 76px;
+  }
+}
+
+/* ---------- Loader ---------- */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.loader.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.loader__spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.25);
+  border-top-color: var(--pin-blue);
+  animation: spin 800ms linear infinite;
+}
+
+body[data-theme="light"] .loader__spinner {
+  border-color: rgba(0, 0, 0, 0.15);
+  border-top-color: var(--pin-blue);
+}
+
+.loader__text {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-on-dark);
+}
+
+body[data-theme="light"] .loader__text {
+  color: var(--text-on-light);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Tarjeta-pin (marcador Leaflet) ---------- */
+
+.pin-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -100%);
+}
+
+.pin-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: max-content;
+  max-width: 240px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--pin-blue);
+  color: var(--pin-text);
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.pin-card__ip {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pin-card__row {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.pin-card__row strong {
+  font-weight: 600;
+}
+
+.pin-card__tail {
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 16px solid var(--pin-blue);
+  margin-top: -1px;
+}
+
+/* Leaflet: quitar el fondo blanco por defecto de los divIcon */
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}
